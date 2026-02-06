@@ -5,10 +5,6 @@
 */
 
 #yt-summary-gemini-container {
-    display: inline-block;
-}
-
-#yt-summary-gemini-button {
-    /* Ensure our button sits nicely in the row */
+    display: inline-flex;
     margin-right: 8px;
 }

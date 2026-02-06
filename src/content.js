@@ -41,24 +41,9 @@ function checkForInjectionPoint() {
     const actionsContainer = document.querySelector("ytd-watch-metadata #actions");
     if (!actionsContainer) return;
 
-    // Find the Share button: it's a <yt-button-view-model> whose text matches a share term
-    const viewModels = actionsContainer.querySelectorAll("yt-button-view-model");
-    let shareButton = null;
-
-    for (const vm of viewModels) {
-        const text = (vm.innerText || "").trim();
-        if (SHARE_TERMS.some(term => text.toLowerCase().includes(term.toLowerCase()))) {
-            shareButton = vm;
-            break;
-        }
-    }
-
-    if (shareButton) {
-        injectButton(shareButton.parentElement, shareButton);
-    } else if (actionsContainer.children.length > 0) {
-        // Fallback: append to actions container if share button not found
-        injectButton(actionsContainer, null);
-    }
+    // We want to inject at the very beginning (left of Thumbs Up)
+    // So we just pass the container. The injectButton function handles the prepend logic.
+    injectButton(actionsContainer, null);
 }
 
 function injectButton(container, shareButton) {
@@ -89,7 +74,8 @@ function injectButton(container, shareButton) {
     button.id = BUTTON_ID;
     button.className = "yt-spec-button-shape-next yt-spec-button-shape-next--tonal yt-spec-button-shape-next--mono yt-spec-button-shape-next--size-m yt-spec-button-shape-next--icon-leading yt-spec-button-shape-next--enable-backdrop-filter-experiment";
     button.setAttribute("aria-label", "Summarize");
-    button.style.marginRight = "8px"; // Spacing
+    button.setAttribute("aria-label", "Summarize");
+    // button.style.marginRight = "8px"; // START_REMOVED - Moved to CSS (container)
 
     // Icon
     const iconDiv = document.createElement("div");
@@ -153,14 +139,27 @@ function injectButton(container, shareButton) {
         }, 500);
     });
 
-    // Injection
-    if (shareButton) {
-        // We inject the wrapper (custom element)
-        shareButton.parentElement.insertBefore(wrapper, shareButton);
-        console.log("YT Summary: Button injected LEFT of Share button");
+    // Injection: Inject before the "Like" button (ytd-segmented-like-dislike-button-renderer)
+    // or fallback to first child.
+
+    // The Like button is usually a <ytd-segmented-like-dislike-button-renderer>
+    // The Like button is usually a <ytd-segmented-like-dislike-button-renderer> or <segmented-like-dislike-button-view-model>
+    const likeButton = container.querySelector("ytd-segmented-like-dislike-button-renderer, segmented-like-dislike-button-view-model");
+
+    if (likeButton) {
+        // Fix: Ensure we insert into the DIRECT parent of the Like button
+        // The Like button might be nested (e.g. inside #top-level-buttons-computed),
+        // but our 'container' might be #actions (the grandparent).
+        // insertBefore requires the reference node to be a direct child.
+        likeButton.parentElement.insertBefore(wrapper, likeButton);
+        console.log("YT Summary: Button injected LEFT of Like button");
+    } else if (container.firstChild) {
+        // Fallback: Just put it at the start
+        container.insertBefore(wrapper, container.firstChild);
+        console.log("YT Summary: Button injected at START of actions container (Like button not found)");
     } else {
         container.appendChild(wrapper);
-        console.log("YT Summary: Button injected (appended to actions)");
+        console.log("YT Summary: Button injected (appended to empty actions)");
     }
 }
 
