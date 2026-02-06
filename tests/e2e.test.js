@@ -35,7 +35,7 @@ describe('YT Summary Extension E2E', () => {
             throw e;
         }
 
-        const buttonText = await page.$eval('#yt-summary-gemini-button span', el => el.textContent);
+        const buttonText = await page.$eval('#yt-summary-gemini-button .yt-spec-button-shape-next__button-text-content', el => el.textContent);
         expect(buttonText).toBe('Summarize');
     });
 });
