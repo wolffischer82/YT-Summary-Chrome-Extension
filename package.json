@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "package": "zip -r yt-summary-extension.zip . -x \"node_modules/*\" \"tests/*\" \".git/*\" \".gitignore\" \"package-lock.json\" \"package.json\" \"README.md\" \"*.zip\""
   },
   "keywords": [],
   "author": "",
