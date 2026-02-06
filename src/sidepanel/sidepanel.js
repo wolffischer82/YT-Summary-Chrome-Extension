@@ -27,13 +27,16 @@ async function generateSummary(videoUrl, videoTitle, transcript) {
     loadingDiv.style.display = 'flex';
 
     try {
+        if (!transcript) {
+            throw new Error('Could not extract transcript for this video. The video may not have captions available.');
+        }
+
         const apiKey = await getApiKey();
         if (!apiKey) {
             throw new Error('Please set your Gemini API Key in the extension options.');
         }
 
-
-        const { summary, promptUsed } = await callGeminiApi(apiKey, videoUrl, transcript);
+        const { summary, promptUsed } = await callGeminiApi(apiKey, videoUrl, videoTitle, transcript);
 
         // Save result
         chrome.storage.local.set({
@@ -74,20 +77,14 @@ function getApiKey() {
     });
 }
 
-async function callGeminiApi(apiKey, videoUrl, transcript) {
+async function callGeminiApi(apiKey, videoUrl, videoTitle, transcript) {
     const modelName = 'gemini-3-flash-preview';
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
 
-    let prompt = `Create a detailed summary of this video: ${videoUrl}`;
-
-    if (transcript) {
-        prompt = `You are a helpful assistant. Provide a detailed summary of the following YouTube video based on its transcript.\n\n` +
-            `Video Title: ${videoUrl} (Reference URL)\n` +
-            `Transcript:\n${transcript}\n\n` +
-            `Summary:`;
-    } else {
-        prompt += "\n\n(No transcript available. Attempting summary from metadata/knowledge if possible, otherwise explain you need transcript.)";
-    }
+    const prompt = `You are a helpful assistant. Provide a detailed summary of the following YouTube video based on its transcript.\n\n` +
+        `Video Title: ${videoTitle || videoUrl}\n` +
+        `Transcript:\n${transcript}\n\n` +
+        `Summary:`;
 
     const response = await fetch(endpoint, {
         method: 'POST',
