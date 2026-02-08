@@ -6,7 +6,7 @@ A Chrome extension that summarizes YouTube videos using Google's Gemini 3.0 Flas
 
 - **Summarize Button**: Adds a "Summarize" button next to the Like/Dislike buttons on YouTube video pages.
 - **Side Panel**: Opens a side panel to display the summary.
-- **Gemini Integration**: Uses the Gemini API to generate concise summaries of video transcripts.
+- **Gemini Integration**: Uses the Gemini API (API key from aistudio.google.com required!) to generate concise summaries of video transcripts.
 
 ## Installation
 
