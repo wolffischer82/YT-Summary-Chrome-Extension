@@ -8,6 +8,10 @@ A Chrome extension that summarizes YouTube videos using Google's Gemini 3.0 Flas
 - **Side Panel**: Opens a side panel to display the summary.
 - **Gemini Integration**: Uses the Gemini API (API key from aistudio.google.com required!) to generate concise summaries of video transcripts.
 
+## Documentation
+- [Product Vision & User Stories](VISION.md)
+- [Technical Specification](TECHNICAL_SPEC.md)
+
 ## Installation
 
 ### Load Unpacked (for development)
