@@ -157,6 +157,71 @@ h1 {
   border-bottom: 1px solid #bbb;
 }
 
+#loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  display: none;
+  /* Hidden by default */
+}
+
+#error {
+  color: #d32f2f;
+  background-color: #ffcdd2;
+  padding: 10px;
+  border-radius: 4px;
+  margin: 10px 0;
+  display: none;
+  /* Hidden by default */
+}
+
+/* Update existing #qa-section if needed, or add new properties */
+#qa-section {
+  /* Height is set via JS style attribute during resize */
+  height: 250px;
+  flex-shrink: 0;
+  display: flex;
+  /* overridden by display: none in JS initially? No, let's set initial state here */
+  display: none;
+  flex-direction: column;
+  background-color: #f9f9f9;
+  border-top: none;
+  overflow: hidden;
+  /* Contain the children */
+  box-sizing: border-box;
+  padding-bottom: 0;
+  /* Let margin handle spacing */
+}
+
+/* Update #qa-separator */
+#qa-separator {
+  /* Static separator styles */
+  background-color: #ccc;
+  height: 1px;
+  flex-shrink: 0;
+}
+
+#input-area-container {
+  display: flex;
+  gap: 5px;
+  padding: 10px;
+  flex-shrink: 0;
+  /* Keep input fixed size */
+  background: #f9f9f9;
+}
+
+#question-input {
+  flex-grow: 1;
+  padding: 5px;
+}
+
+#ask-button {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
 
 /* Markdown Styles */
 .summary-content {

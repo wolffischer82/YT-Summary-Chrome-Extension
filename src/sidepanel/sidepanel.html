@@ -31,24 +31,22 @@
             <div id="content">
                 <p class="placeholder">Select a video and click "Summarize" to generate a summary.</p>
             </div>
-            <div id="loading" style="display: none;">
+            <div id="loading">
                 <div class="spinner"></div>
                 <p>Generating summary with Gemini 3.0 Flash...</p>
             </div>
-            <div id="error" style="display: none;"></div>
+            <div id="error"></div>
         </div>
 
         <div id="resize-handle"></div>
 
-        <div id="qa-section" style="display: none;">
+        <div id="qa-section">
             <h3>Ask a Question</h3>
             <div id="chat-history"></div>
-            <div id="qa-separator" style="height: 1px; background: #ccc; flex-shrink: 0;"></div>
-            <div id="input-area-container"
-                style="gap: 5px; padding: 10px; background: #f9f9f9; flex-shrink: 0; display: flex;">
-                <input type="text" id="question-input" placeholder="Ask about the video..."
-                    style="flex-grow: 1; padding: 5px;">
-                <button id="ask-button" style="padding: 5px 10px; cursor: pointer;">Ask</button>
+            <div id="qa-separator"></div>
+            <div id="input-area-container">
+                <input type="text" id="question-input" placeholder="Ask about the video...">
+                <button id="ask-button">Ask</button>
             </div>
         </div>
     </div>
