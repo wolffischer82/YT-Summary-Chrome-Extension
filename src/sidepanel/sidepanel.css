@@ -266,3 +266,16 @@ h1 {
 .summary-content strong {
   color: #000;
 }
+
+.qa-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.qa-header h3 {
+  margin: 0;
+  font-size: 1.17em;
+}
