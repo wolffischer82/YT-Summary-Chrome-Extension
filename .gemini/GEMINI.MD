@@ -1,0 +1,1 @@
+1. Whenever I give you instructions, check whether they have an impact on the requirements in the @README.md, @SPEC.md or @TECHNICAL_SPEC.md file. If you find differences, change those files accordingly.

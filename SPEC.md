@@ -14,9 +14,13 @@ To enable YouTube users to quickly digest video content without watching the ent
 2.   **As a user**, I want the summary to appear in a side panel so that it doesn't obstruct the video player.
 3.   **As a user**, I want to provide my own Gemini API key so that I have control over usage and limits.
 4.   **As a user**, I want the summary to be concise and accurate so I can trust the information.
-5.   **As a developer**, I want to easily package the extension for distribution.
+5.   **As a user**, I want to be able to manually re-generate the summary if I want a fresh perspective or if the previous one was incomplete.
+6.   **As a user**, I want to be able to clear the chat history for the current video without losing the summary.
+7.   **As a user**, I want to include the transcript and conversation history in my Q&A session so that I can ask follow-up questions in context.
+8.   **As a user**, I want the Q&A input box to be always visible at the bottom of the side panel so that I don't have to scroll down to ask a question.
+9.   **As a user**, I want to be able to save the chat history per video so that I can resume my conversation later.
+10.   **As a user**, I want the extension to automatically load the previous summary and chat history for a video I've already visited, so I don't have to wait for it to regenerate.
 
 ## Future Enhancements
--   **As a user**, I want to ask questions in a prompt box below the summary so that I can get more information from the transcript. 
 -   **As a user**, I want to be able to save the last 5 summaries so that I can read it later.
 -   **As a user**, I want to be able to easily pick between the last 5 summaries so that I can read it later.

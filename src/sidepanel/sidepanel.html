@@ -8,16 +8,51 @@
 
 <body>
     <div class="container">
-        <h1>Video Summary</h1>
-        <div id="content">
-            <p class="placeholder">Select a video and click "Summarize" to generate a summary.</p>
+        <div class="header">
+            <h1>Video Summary</h1>
+            <div class="header-actions">
+                <button id="regenerate-btn" title="Re-create Summary" aria-label="Re-create Summary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 4v6h-6"></path>
+                        <path d="M1 20v-6h6"></path>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                </button>
+                <button id="clear-chat-header-btn" title="Clear Chat History" aria-label="Clear Chat History">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 6h18"></path>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                </button>
+            </div>
         </div>
-        <div id="loading" style="display: none;">
-            <div class="spinner"></div>
-            <p>Generating summary with Gemini 3.0 Flash...</p>
+
+        <div id="scrollable-content">
+            <div id="content">
+                <p class="placeholder">Select a video and click "Summarize" to generate a summary.</p>
+            </div>
+            <div id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Generating summary with Gemini 3.0 Flash...</p>
+            </div>
+            <div id="error" style="display: none;"></div>
         </div>
-        <div id="error" style="display: none;"></div>
+
+        <div id="resize-handle"></div>
+
+        <div id="qa-section" style="display: none;">
+            <h3>Ask a Question</h3>
+            <div id="chat-history"></div>
+            <div id="qa-separator" style="height: 1px; background: #ccc; flex-shrink: 0;"></div>
+            <div id="input-area-container"
+                style="gap: 5px; padding: 10px; background: #f9f9f9; flex-shrink: 0; display: flex;">
+                <input type="text" id="question-input" placeholder="Ask about the video..."
+                    style="flex-grow: 1; padding: 5px;">
+                <button id="ask-button" style="padding: 5px 10px; cursor: pointer;">Ask</button>
+            </div>
+        </div>
     </div>
+    <script src="../storage.js"></script>
     <script src="sidepanel.js"></script>
 </body>
 

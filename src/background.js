@@ -6,22 +6,36 @@ chrome.sidePanel
 // Listen for messages from content script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.type === 'OPEN_SIDE_PANEL') {
-        // In some cases we might need to handle opening here, 
-        // but often the user interaction (click) in content script 
-        // needs to coordinate with sidePanel.open if permitted.
-        // However, opening side panel PROGRAMMATICALLY from content script is restricted.
-        // It generally requires a user gesture in the extension context (like clicking browser action).
-
-        // Strategy: The button in the content script can't directly open the side panel 
-        // unless we use `chrome.sidePanel.open` which requires a user gesture in the BACKGROUND context (not content script).
-        // BUT, chrome.sidePanel.open({tabId, windowId}) is available in Chrome 114+ from background.
-
         if (sender.tab && sender.tab.id) {
             chrome.sidePanel.open({ tabId: sender.tab.id });
-            // We also forward the video URL to the side panel via storage or runtime message
-            // Since the sidebar might not be open yet, we can save it to storage
-            // and the sidebar checks storage on load, OR we send a message.
-            // Let's do both or send message after a slight delay.
         }
+    }
+});
+
+// Update Side Panel when switching tabs
+chrome.tabs.onActivated.addListener(async (activeInfo) => {
+    const tab = await chrome.tabs.get(activeInfo.tabId);
+    if (tab.url && tab.url.includes("youtube.com/watch")) {
+        // Notify side panel to update
+        chrome.runtime.sendMessage({
+            type: "UPDATE_SIDE_PANEL",
+            url: tab.url,
+            title: tab.title
+        }).catch(() => {
+            // Side panel might be closed, ignore error
+        });
+    }
+});
+
+// Update Side Panel when tab URL changes (e.g. navigation within YouTube)
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (changeInfo.status === 'complete' && tab.url && tab.url.includes("youtube.com/watch")) {
+        chrome.runtime.sendMessage({
+            type: "UPDATE_SIDE_PANEL",
+            url: tab.url,
+            title: tab.title
+        }).catch(() => {
+            // Side panel might be closed
+        });
     }
 });

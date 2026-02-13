@@ -1,6 +1,8 @@
 // This script runs in the MAIN world (YouTube's page context).
 // Communicates with the isolated-world content script via window.postMessage.
 
+console.log("YT Summary [MAIN]: Transcript Script v2.0 LOADED");
+
 window.addEventListener("message", async (event) => {
     if (event.source !== window) return;
     if (event.data?.type !== "YT_SUMMARY_GET_TRANSCRIPT") return;
@@ -26,73 +28,97 @@ window.addEventListener("message", async (event) => {
 });
 
 async function fetchTranscript(videoId) {
-    // Step 1: Get INNERTUBE_API_KEY (from ytcfg or fallback)
+    // Strategy: Try ANDROID client first (less restrictive), then fallback to WEB client.
+
+    // Step 1: Get INNERTUBE_API_KEY
     const apiKey = window.ytcfg?.get?.("INNERTUBE_API_KEY") || "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8";
 
-    // Step 2: Call innertube player endpoint as ANDROID client
-    // The Android client returns caption URLs without PoToken (exp=xpe) restrictions,
-    // unlike the WEB client which blocks timedtext fetches.
-    console.log("YT Summary [MAIN]: Calling innertube player as ANDROID client for:", videoId);
+    console.log("YT Summary [MAIN]: Fetching transcript for", videoId);
 
-    const playerResponse = await fetch(
-        `https://www.youtube.com/youtubei/v1/player?key=${apiKey}`, {
+    // Try ANDROID
+    let transcript = await fetchTranscriptDispatched(videoId, apiKey, "ANDROID", "20.10.38");
+    if (transcript) return transcript;
+
+    console.warn("YT Summary [MAIN]: ANDROID client failed to return captions. Retrying with WEB client...");
+
+    // Try WEB
+    transcript = await fetchTranscriptDispatched(videoId, apiKey, "WEB", "2.20230920.00.00");
+    if (transcript) return transcript;
+
+    console.error("YT Summary [MAIN]: All clients failed to return captions.");
+    return null;
+}
+
+async function fetchTranscriptDispatched(videoId, apiKey, clientName, clientVersion) {
+    try {
+        const playerResponse = await fetch(
+            `https://www.youtube.com/youtubei/v1/player?key=${apiKey}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 context: {
                     client: {
-                        clientName: "ANDROID",
-                        clientVersion: "20.10.38"
+                        clientName: clientName,
+                        clientVersion: clientVersion
                     }
                 },
                 videoId: videoId
             })
         }
-    );
+        );
 
-    if (!playerResponse.ok) {
-        console.error("YT Summary [MAIN]: Player API error:", playerResponse.status);
+        if (!playerResponse.ok) {
+            console.error(`YT Summary [MAIN]: ${clientName} Player API error:`, playerResponse.status);
+            return null;
+        }
+
+        const playerData = await playerResponse.json();
+
+        // Check playability
+        const status = playerData.playabilityStatus?.status;
+        if (status !== "OK") {
+            // Provide info but don't hard fail yet, let caption check decide
+            // console.log(`YT Summary [MAIN]: ${clientName} Status:`, status);
+        }
+
+        const captionTracks = playerData.captions?.playerCaptionsTracklistRenderer?.captionTracks;
+        if (!captionTracks || captionTracks.length === 0) {
+            console.warn(`YT Summary [MAIN]: ${clientName} No caption tracks found.`);
+            return null;
+        }
+
+        console.log(`YT Summary [MAIN]: ${clientName} Found`, captionTracks.length, "caption track(s)");
+
+        // Prefer English, fall back to first available
+        captionTracks.sort((a, b) => {
+            if (a.languageCode === 'en') return -1;
+            if (b.languageCode === 'en') return 1;
+            return 0;
+        });
+        const track = captionTracks[0];
+
+        // Step 3: Fetch the transcript XML
+        const captionUrl = track.baseUrl.replace("&fmt=srv3", "");
+        console.log(`YT Summary [MAIN]: ${clientName} Fetching caption XML from`, captionUrl);
+
+        const captionResponse = await fetch(captionUrl);
+        const xmlText = await captionResponse.text();
+
+        if (!xmlText || xmlText.length === 0) {
+            console.error(`YT Summary [MAIN]: ${clientName} Empty caption response`);
+            return null;
+        }
+
+        // Parse XML
+        return parseTranscriptXML(xmlText);
+
+    } catch (e) {
+        console.error(`YT Summary [MAIN]: ${clientName} Exception:`, e);
         return null;
     }
+}
 
-    const playerData = await playerResponse.json();
-
-    // Check playability
-    const status = playerData.playabilityStatus?.status;
-    if (status !== "OK") {
-        console.error("YT Summary [MAIN]: Video not playable:", status, playerData.playabilityStatus?.reason);
-        return null;
-    }
-
-    const captionTracks = playerData.captions?.playerCaptionsTracklistRenderer?.captionTracks;
-    if (!captionTracks || captionTracks.length === 0) {
-        console.warn("YT Summary [MAIN]: No caption tracks available");
-        return null;
-    }
-
-    console.log("YT Summary [MAIN]: Found", captionTracks.length, "caption track(s)");
-
-    // Prefer English, fall back to first available
-    captionTracks.sort((a, b) => (a.languageCode === "en" ? -1 : 1));
-    const track = captionTracks[0];
-    console.log("YT Summary [MAIN]: Using track:", track.languageCode, track.kind === "asr" ? "(auto-generated)" : "(manual)");
-
-    // Step 3: Fetch the transcript XML
-    // Strip &fmt=srv3 to get default XML format with <text> elements
-    const captionUrl = track.baseUrl.replace("&fmt=srv3", "");
-    console.log("YT Summary [MAIN]: Fetching caption XML...");
-
-    const captionResponse = await fetch(captionUrl);
-    const xmlText = await captionResponse.text();
-
-    if (!xmlText || xmlText.length === 0) {
-        console.error("YT Summary [MAIN]: Empty caption response");
-        return null;
-    }
-
-    console.log("YT Summary [MAIN]: Caption XML received, length:", xmlText.length);
-
-    // Parse XML with regex (DOMParser is blocked by YouTube's Trusted Types policy)
+function parseTranscriptXML(xmlText) {
     let fullText = "";
     const regex = /<text[^>]*>([\s\S]*?)<\/text>/g;
     let match;
@@ -104,11 +130,8 @@ async function fetchTranscript(videoId) {
             .replace(/&gt;/g, ">")
             .replace(/&quot;/g, '"')
             .replace(/&#39;/g, "'")
-            .replace(/<[^>]+>/g, ""); // strip any formatting tags like <i>
+            .replace(/<[^>]+>/g, "");
         fullText += text + " ";
     }
-
     return fullText.trim() || null;
 }
-
-console.log("YT Summary [MAIN]: Transcript helper ready");

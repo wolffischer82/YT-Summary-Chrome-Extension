@@ -1,66 +1,181 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
-  padding: 16px;
+  padding: 0;
   color: #333;
   background-color: #f9f9f9;
-}
-
-h1 {
-  font-size: 20px;
-  margin-top: 0;
-  border-bottom: 2px solid #e0e0e0;
-  padding-bottom: 10px;
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+  overflow: hidden;
+  /* Prevent body scroll */
 }
 
 .container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  height: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+  overflow: hidden;
+  /* Prevent container scroll */
 }
 
-.placeholder {
-  color: #666;
-  font-style: italic;
+h1 {
+  font-size: 20px;
+  margin: 0;
+  padding: 0;
+  border: none;
 }
 
-#loading {
+.header {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.header-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  color: #666;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  color: #666;
 }
 
-.spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #4285f4;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  animation: spin 1s linear infinite;
-  margin-bottom: 10px;
+.header-actions button:hover {
+  background-color: #e0e0e0;
+  color: #333;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+#scrollable-content {
+  flex: 1 1 auto;
+  /* Grow and shrink to fill available space */
+  overflow-y: auto;
+  min-height: 0;
+  /* Allow shrinking below content size */
+  margin-bottom: 0;
+  padding-right: 5px;
 }
 
-#error {
-  color: #d32f2f;
-  background-color: #fdecea;
+#qa-section {
+  /* Height is set via JS style attribute during resize */
+  height: 250px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: #f9f9f9;
+  border-top: none;
+  overflow: hidden;
+  /* Contain the children */
+  box-sizing: border-box;
+  padding-bottom: 0;
+  /* Let margin handle spacing */
+}
+
+#chat-history {
+  flex: 1 1 0;
+  /* Force basis to 0 to ensure proper scrolling */
+  overflow-y: auto;
+  /* Enable scrolling */
+  min-height: 0;
+  max-height: 100%;
+  /* Ensure it respects parent height */
   padding: 10px;
-  border-radius: 4px;
-  border: 1px solid #eba6a3;
+  margin-bottom: 15px;
+  /* Lift scrollbar away from bottom */
+  width: 100%;
+  box-sizing: border-box;
 }
+
+/* ... skipped intermediate code ... */
+.chat-message.user {
+  font-weight: bold;
+  color: #1a73e8;
+  /* Blue for user to distinguish */
+}
+
+/* Removed empty .chat-message.assistant rule */
+
+.chat-message p {
+  margin: 0 0 10px 0;
+  /* Add margin to paragraphs inside messages */
+}
+
+#qa-separator {
+  /* Static separator styles */
+  background-color: #ccc;
+  height: 1px;
+}
+
+#input-area-container {
+  display: flex;
+  gap: 5px;
+  padding: 10px;
+  flex-shrink: 0;
+  /* Keep input fixed size */
+  background: #f9f9f9;
+}
+
+#resize-handle {
+  height: 8px;
+  background-color: #f1f1f1;
+  cursor: row-resize;
+  flex-shrink: 0;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  /* Hidden by default via JS logic, but let's have base style */
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
+  /* Add some spacing */
+}
+
+#resize-handle:hover {
+  background-color: #e0e0e0;
+}
+
+/* Optional: Add a visual indicator (grip lines) */
+#resize-handle::after {
+  content: "";
+  display: block;
+  width: 30px;
+  height: 3px;
+  border-top: 1px solid #bbb;
+  border-bottom: 1px solid #bbb;
+}
+
 
 /* Markdown Styles */
 .summary-content {
   line-height: 1.6;
 }
-.summary-content h2 { font-size: 1.2em; margin-top: 15px; }
-.summary-content ul { padding-left: 20px; }
-.summary-content li { margin-bottom: 5px; }
-.summary-content strong { color: #000; }
+
+.summary-content h2 {
+  font-size: 1.2em;
+  margin-top: 15px;
+}
+
+.summary-content ul {
+  padding-left: 20px;
+}
+
+.summary-content li {
+  margin-bottom: 5px;
+}
+
+.summary-content strong {
+  color: #000;
+}
