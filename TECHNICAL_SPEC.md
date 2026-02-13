@@ -17,7 +17,8 @@ The extension operates as a Chrome/Firefox browser extension using Manifest V3.
         -   Fixed Header.
         -   Scrollable Summary/Content area.
         -   Fixed Bottom Q&A Input section.
-        -   **Header**: Contains "Video Summary" title and Action Buttons (Regenerate, Clear Chat).
+        -   **Header**: Contains "Video Summary" title and Action Buttons (Regenerate, Clear Chat, Open Options).
+        -   **Open Options**: Opens `src/options/options.html` in a standalone popup window (`chrome.windows.create`, type: `popup`) for quick access.
 
 3.  **Background Script / Service Worker**:
     -   Handles extension lifecycle events.

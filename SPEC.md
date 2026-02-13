@@ -20,6 +20,8 @@ To enable YouTube users to quickly digest video content without watching the ent
 8.   **As a user**, I want the Q&A input box to be always visible at the bottom of the side panel so that I don't have to scroll down to ask a question.
 9.   **As a user**, I want to be able to save the chat history per video so that I can resume my conversation later.
 10.   **As a user**, I want the extension to automatically load the previous summary and chat history for a video I've already visited, so I don't have to wait for it to regenerate.
+11.  **As a user**, I want to be able to quickly access the extension's settings via an "Open Options" button in the header, so I don't have to navigate through the browser's extension menu.
+12.  **As a user**, I want the options menu to open in a small, convenient popup window so I can adjust settings without leaving my current context.
 
 ## Future Enhancements
 -   **As a user**, I want to be able to save the last 5 summaries so that I can read it later.
