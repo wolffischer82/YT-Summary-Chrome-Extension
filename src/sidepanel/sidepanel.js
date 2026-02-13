@@ -387,7 +387,7 @@ function displaySummary(text, videoTitle, videoUrl, promptUsed) {
     `;
 
     contentDiv.innerHTML = debugHtml + formatMarkdown(text);
-    contentDiv.className = 'summary-content';
+    contentDiv.className = 'summary-content markdown-content';
 }
 
 // Q&A Functions
@@ -476,7 +476,7 @@ async function handleAskQuestion() {
 function appendChatMessage(role, text) {
     const historyDiv = document.getElementById('chat-history');
     const msgDiv = document.createElement('div');
-    msgDiv.className = 'chat-message ' + role;
+    msgDiv.className = 'chat-message markdown-content ' + role;
 
     if (role === 'user') {
         msgDiv.innerHTML = `<strong>You:</strong> ${text}`; // Use Markdown-ish bold for "You"

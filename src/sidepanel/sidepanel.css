@@ -224,6 +224,28 @@ h1 {
 
 
 /* Markdown Styles */
+/* Unified Markdown / Text Styles */
+.markdown-content {
+  line-height: 1.6;
+}
+
+.markdown-content h2 {
+  font-size: 1.2em;
+  margin-top: 15px;
+}
+
+.markdown-content ul {
+  padding-left: 20px;
+}
+
+.markdown-content li {
+  margin-bottom: 5px;
+}
+
+.markdown-content strong {
+  color: #000;
+}
+
 .summary-content {
   line-height: 1.6;
 }
