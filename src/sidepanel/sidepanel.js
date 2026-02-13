@@ -33,6 +33,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('ask-button').addEventListener('click', handleAskQuestion);
     document.getElementById('regenerate-btn').addEventListener('click', () => handleRegenerate());
     document.getElementById('clear-chat-header-btn').addEventListener('click', clearChat);
+    document.getElementById('open-options-btn').addEventListener('click', () => {
+        chrome.windows.create({
+            url: chrome.runtime.getURL('src/options/options.html'),
+            type: 'popup',
+            width: 370,
+            height: 220
+        });
+    });
 
     // Resizer Logic
     const handle = document.getElementById('resize-handle');
