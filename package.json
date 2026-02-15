@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "package": "zip -r yt-summary-extension.zip . -x \"node_modules/*\" \"tests/*\" \".git/*\" \".gitignore\" \"package-lock.json\" \"package.json\" \"README.md\" \"*.zip\"",
-    "dev": "./dev.sh"
+    "dev": "./dev.sh",
+    "build": "node build.js"
   },
   "keywords": [],
   "author": "",

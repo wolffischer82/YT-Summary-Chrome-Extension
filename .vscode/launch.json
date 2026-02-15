@@ -11,6 +11,17 @@
                 "dev"
             ],
             "console": "integratedTerminal"
+        },
+        {
+            "name": "Build Extension",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "build"
+            ],
+            "console": "integratedTerminal"
         }
     ]
 }
