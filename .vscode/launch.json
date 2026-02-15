@@ -2,18 +2,29 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run Extension (dev)",
+            "name": "Run Extension (Chrome)",
             "type": "node",
             "request": "launch",
             "runtimeExecutable": "npm",
             "runtimeArgs": [
                 "run",
-                "dev"
+                "dev:chrome"
             ],
             "console": "integratedTerminal"
         },
         {
-            "name": "Build Extension",
+            "name": "Run Extension (Firefox)",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "dev:firefox"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Build Extension (All)",
             "type": "node",
             "request": "launch",
             "runtimeExecutable": "npm",

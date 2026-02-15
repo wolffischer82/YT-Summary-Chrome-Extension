@@ -7,7 +7,11 @@
     "test": "jest",
     "package": "zip -r yt-summary-extension.zip . -x \"node_modules/*\" \"tests/*\" \".git/*\" \".gitignore\" \"package-lock.json\" \"package.json\" \"README.md\" \"*.zip\"",
     "dev": "./dev.sh",
-    "build": "node build.js"
+    "dev:chrome": "./dev.sh",
+    "dev:firefox": "./dev-firefox.sh",
+    "build": "node build.js",
+    "build:chrome": "node build.js chrome",
+    "build:firefox": "node build.js firefox"
   },
   "keywords": [],
   "author": "",
